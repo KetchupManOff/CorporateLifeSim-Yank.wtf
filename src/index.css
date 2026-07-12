@@ -1,0 +1,122 @@
+:root {
+  --win98-teal: #008080;
+  --win98-gray: #c0c0c0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--win98-teal);
+  overflow: hidden;
+  font-family: "Pixelated MS Sans Serif", Arial;
+  -webkit-font-smoothing: none;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.desktop {
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.taskbar {
+  height: 28px;
+  background-color: var(--win98-gray);
+  border-top: 2px solid #dfdfdf;
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  box-shadow: inset 0 1px 0 #fff;
+  z-index: 9999;
+}
+
+.start-button {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Fix for react-draggable and 98.css window */
+.react-draggable {
+  position: absolute !important;
+  transition: none; /* Disable transitions for smooth dragging */
+  z-index: 1; /* Default z-index, will be overridden by JS */
+}
+
+/* Ensure windows can overlap properly */
+.desktop {
+  position: relative;
+  z-index: 0;
+}
+
+.desktop > * {
+  position: relative;
+}
+
+.window-body {
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.resizable-window {
+  resize: both;
+  overflow: hidden;
+  min-width: 400px;
+  min-height: 300px;
+}
+
+.maximized-window {
+  transform: none !important;
+  width: 100vw !important;
+  height: calc(100vh - 28px) !important;
+  top: 0 !important;
+  left: 0 !important;
+  position: fixed !important;
+  z-index: 1000 !important;
+  resize: none !important;
+}
+
+/* Inactive title bar — Win98 gray gradient */
+.title-bar.inactive {
+  background: linear-gradient(90deg, #808080, #b5b5b5) !important;
+}
+.title-bar.inactive .title-bar-text {
+  color: #c0c0c0;
+}
+
+/* Active title bar enhancement */
+.title-bar:not(.inactive) {
+  background: linear-gradient(90deg, #0050d0, #4080ff) !important;
+}
+.title-bar:not(.inactive) .title-bar-text {
+  color: white;
+  font-weight: bold;
+}
+
+/* Window shadow for depth */
+.window {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Prevent text selection during window dragging - only while dragging */
+.react-draggable-dragging {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Allow normal interaction when not dragging */
+.window {
+  user-select: auto;
+}

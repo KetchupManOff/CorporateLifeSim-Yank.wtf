@@ -1,0 +1,37 @@
+{
+  "composeTemplates": [
+    {
+      "en": "Dear client, we are pleased to inform you that your request has been processed. Thank you for your business. Sincerely, Corporate Drone.",
+      "fr": "Cher client, nous avons le plaisir de vous informer que votre demande a été traitée. Nous vous remercions de votre confiance. Cordialement, Drone d'entreprise."
+    },
+    {
+      "en": "Hello team, please find attached the Q3 reports. Ensure all metrics are aligned with our synergistic paradigms before EOD. Best, Management.",
+      "fr": "Bonjour l'équipe, veuillez trouver ci-joint les rapports du T3. Assurez-vous que toutes les mesures sont alignées sur nos paradigmes synergiques avant la fin de la journée. Cordialement, La Direction."
+    },
+    {
+      "en": "To whom it may concern: Your invoice is past due. Please remit payment immediately to avoid service interruption. Regards, Billing.",
+      "fr": "À qui de droit : Votre facture est en souffrance. Veuillez effectuer le paiement immédiatement pour éviter une interruption de service. Cordialement, Facturation."
+    },
+    {
+      "id": "courage_10",
+      "condition": { "type": "courage", "threshold": 10 },
+      "sender": "Anonymous Coworker",
+      "subject": { "en": "I saw what you did", "fr": "J'ai vu ce que tu as fait" },
+      "body": { "en": "I saw you taking those supplies. Don't worry, I won't tell. Keep up the good work... maybe I'll join you someday.", "fr": "Je t'ai vu prendre ces fournitures. Ne t'inquiète pas, je ne dirai rien. Continue ton bon travail... peut-être que je me joindrai à toi un jour." }
+    },
+    {
+      "id": "courage_50",
+      "condition": { "type": "courage", "threshold": 50 },
+      "sender": "Management <mgmt@corp.intranet>",
+      "subject": { "en": "Missing items", "fr": "Objets manquants" },
+      "body": { "en": "We have noticed a severe shortage of office supplies on your floor. Please remain vigilant and report any suspicious behavior.", "fr": "Nous avons remarqué une grave pénurie de fournitures de bureau à votre étage. Veuillez rester vigilant et signaler tout comportement suspect." }
+    },
+    {
+      "id": "cash_1000",
+      "condition": { "type": "cash", "threshold": 1000 },
+      "sender": "Bank of Corporate America",
+      "subject": { "en": "Unusual Account Activity", "fr": "Activité de compte inhabituelle" },
+      "body": { "en": "We have noticed a sudden increase in your account balance. We assume you've been working hard. We have upgraded your account to Premium status.", "fr": "Nous avons remarqué une augmentation soudaine du solde de votre compte. Nous supposons que vous avez travaillé dur. Nous avons mis à jour votre compte vers le statut Premium." }
+    }
+  ]
+}

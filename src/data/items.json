@@ -1,0 +1,106 @@
+{
+  "paper": {
+    "name": {
+      "en": "Sheet of Paper",
+      "fr": "Feuille de papier"
+    },
+    "description": {
+      "en": "Just a normal piece of printer paper.",
+      "fr": "Juste une feuille de papier d'imprimante normale."
+    },
+    "price": 0.05,
+    "courageNeeded": 0.0025,
+    "courageYield": 0.000005
+  },
+  "paperclip": {
+    "name": {
+      "en": "Paperclip",
+      "fr": "Trombone"
+    },
+    "description": {
+      "en": "It's small, nobody will notice.",
+      "fr": "C'est petit, personne ne le remarquera."
+    },
+    "price": 0.1,
+    "courageNeeded": 0,
+    "courageYield": 0.00001
+  },
+  "pen": {
+    "name": {
+      "en": "Pen",
+      "fr": "Stylo"
+    },
+    "description": {
+      "en": "A good quality gel pen.",
+      "fr": "Un stylo gel de bonne qualité."
+    },
+    "price": 1.5,
+    "courageNeeded": 0.005,
+    "courageYield": 0.0001
+  },
+  "stapler": {
+    "name": {
+      "en": "Stapler",
+      "fr": "Agrafeuse"
+    },
+    "description": {
+      "en": "A heavy-duty stapler. Definitely noticeable.",
+      "fr": "Une agrafeuse robuste. Certainement remarquable."
+    },
+    "price": 15,
+    "courageNeeded": 0.05,
+    "courageYield": 0.001
+  },
+  "coffee": {
+    "name": {
+      "en": "Coffee Bag",
+      "fr": "Sac de café"
+    },
+    "description": {
+      "en": "Premium roasted coffee from the breakroom.",
+      "fr": "Café torréfié de qualité supérieure de la salle de pause."
+    },
+    "price": 5,
+    "courageNeeded": 0.5,
+    "courageYield": 0.005
+  },
+  "cable": {
+    "name": {
+      "en": "Ethernet Cable",
+      "fr": "Câble Ethernet"
+    },
+    "description": {
+      "en": "IT will definitely be looking for this.",
+      "fr": "Le service informatique le cherchera certainement."
+    },
+    "price": 20,
+    "courageNeeded": 2,
+    "courageYield": 0.02
+  },
+  "data": {
+    "name": {
+      "en": "Gigabytes of Data",
+      "fr": "Gigaoctets de données"
+    },
+    "description": {
+      "en": "Client data, highly illegal to take.",
+      "fr": "Données client, très illégal à prendre."
+    },
+    "price": 150,
+    "courageNeeded": 10,
+    "courageYield": 0.1
+  },
+  "gossip": {
+    "name": {
+      "en": "Juicy Gossip",
+      "fr": "Potins croustillants"
+    },
+    "description": {
+      "en": "The CEO's dirty secrets.",
+      "fr": "Les vilains secrets du PDG."
+    },
+    "price": 0,
+    "courageNeeded": 25,
+    "courageYield": 0.5
+  }
+}

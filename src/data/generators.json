@@ -1,0 +1,46 @@
+{
+  "intern": {
+    "name": {
+      "en": "Bribed Intern",
+      "fr": "Stagiaire corrompu"
+    },
+    "description": {
+      "en": "Steals 1 Coffee Bag per hour. Requires weekly pay.",
+      "fr": "Vole 1 sac de café par heure. Nécessite un paiement hebdomadaire."
+    },
+    "cost": 250
+  },
+  "itGuy": {
+    "name": {
+      "en": "Corrupt IT Guy",
+      "fr": "Informaticien corrompu"
+    },
+    "description": {
+      "en": "Steals 1 Ethernet Cable per hour. Requires weekly pay.",
+      "fr": "Vole 1 câble Ethernet par heure. Nécessite un paiement hebdomadaire."
+    },
+    "cost": 1500
+  },
+  "manager": {
+    "name": {
+      "en": "Shady Manager",
+      "fr": "Manager louche"
+    },
+    "description": {
+      "en": "Steals 1 GB of corporate Data per hour. Requires weekly pay.",
+      "fr": "Vole 1 Go de données d'entreprise par heure. Nécessite un paiement hebdomadaire."
+    },
+    "cost": 8000
+  },
+  "hr": {
+    "name": {
+      "en": "Chatty HR",
+      "fr": "RH bavard"
+    },
+    "description": {
+      "en": "Steals 1 Juicy Gossip per hour (Automatically posted to tumblr for ad revenue). Requires weekly pay.",
+      "fr": "Vole 1 potin croustillant par heure (publié automatiquement sur Tumblr). Nécessite un paiement hebdomadaire."
+    },
+    "cost": 25000
+  }
+}
