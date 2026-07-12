@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Draggable from 'react-draggable';
 import { useGameStore } from '../store/gameStore';
 import { useTranslation } from 'react-i18next';
