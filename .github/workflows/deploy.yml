@@ -34,4 +34,4 @@ jobs:
           local-dir: ./dist/
           server-dir: ./
           port: 21
-          protocol: ftp
+          protocol: ftps
