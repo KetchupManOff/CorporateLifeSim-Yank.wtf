@@ -5,17 +5,20 @@ import { useGameStore } from './store/gameStore';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { tick } = useGameStore();
+  const { tick, processOfflineProgress } = useGameStore();
   const audioContextRef = useRef<AudioContext | null>(null);
   const mouseBuffersRef = useRef<AudioBuffer[]>([]);
   const keyboardBuffersRef = useRef<AudioBuffer[]>([]);
 
   useEffect(() => {
+    // Process any progress earned offline when the app is loaded
+    processOfflineProgress();
+
     const interval = setInterval(() => {
       tick();
     }, 1000);
     return () => clearInterval(interval);
-  }, [tick]);
+  }, [tick, processOfflineProgress]);
 
   useEffect(() => {
     // Generate background computer hum and router modem buzz sounds

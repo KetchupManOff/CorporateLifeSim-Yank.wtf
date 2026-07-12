@@ -65,6 +65,7 @@ interface GameState {
   suspicion: number;
   lastStealTime: number;
   lastPaidTime: number;
+  lastTickTime: number;
   inventory: Inventory;
   generators: Generators;
   activeAds: Ad[];
@@ -78,6 +79,7 @@ interface GameState {
   performCorporateTask: (cashEarned: number, courageDrain: number) => void;
   readEmail: (id: string) => void;
   tick: () => void;
+  processOfflineProgress: () => void;
   reset: () => void;
 }
 
@@ -126,6 +128,7 @@ export const useGameStore = create<GameState>()(
       suspicion: 0,
       lastStealTime: 0,
       lastPaidTime: Date.now(),
+      lastTickTime: Date.now(),
       inventory: initialInventory,
       generators: initialGenerators,
       activeAds: [],
@@ -343,6 +346,7 @@ export const useGameStore = create<GameState>()(
             courage: newCourage,
             suspicion: newSuspicion,
             lastPaidTime: newLastPaidTime,
+            lastTickTime: now,
             generators: newGenerators,
             activeAds: newAds,
             emails: newEmails,
@@ -355,8 +359,144 @@ export const useGameStore = create<GameState>()(
             },
           };
         }),
+
+      processOfflineProgress: () =>
+        set((state) => {
+          const now = Date.now();
+          if (!state.lastTickTime) {
+            return { lastTickTime: now };
+          }
+
+          const elapsedSeconds = Math.floor((now - state.lastTickTime) / 1000);
+          if (elapsedSeconds <= 5) {
+            // Less than 5 seconds, ignore offline calculation
+            return { lastTickTime: now };
+          }
+
+          let newCash = state.cash;
+          let newCourage = state.courage;
+          let newSuspicion = state.suspicion;
+          const newInventory = { ...state.inventory };
+          let newGenerators = { ...state.generators };
+          const newEmails = [...state.emails];
+          let activeAds = [...state.activeAds];
+          let lastPaidTime = state.lastPaidTime;
+          let playedSound = false;
+
+          const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+          let currentSimTime = state.lastTickTime;
+          let remainingSeconds = elapsedSeconds;
+
+          while (remainingSeconds > 0) {
+            const timeToNextPayment = (lastPaidTime + msPerWeek) - currentSimTime;
+            const secondsToNextPayment = Math.floor(timeToNextPayment / 1000);
+
+            let stepSeconds = remainingSeconds;
+            let isPaymentDueThisStep = false;
+
+            if (secondsToNextPayment > 0 && secondsToNextPayment < remainingSeconds) {
+              stepSeconds = secondsToNextPayment;
+              isPaymentDueThisStep = true;
+            }
+
+            // Generators logic during this step
+            const internItems = newGenerators.intern * (1/3600) * stepSeconds;
+            const itGuyItems = newGenerators.itGuy * (1/3600) * stepSeconds;
+            const managerItems = newGenerators.manager * (1/3600) * stepSeconds;
+            const hrItems = newGenerators.hr * (1/3600) * stepSeconds;
+
+            const initialGossip = newInventory.gossip;
+            newInventory.coffee += internItems;
+            newInventory.cable += itGuyItems;
+            newInventory.data += managerItems;
+            newInventory.gossip += hrItems;
+
+            const courageGained = 
+              (internItems * ITEM_DATA.coffee.courageYield) +
+              (itGuyItems * ITEM_DATA.cable.courageYield) +
+              (managerItems * ITEM_DATA.data.courageYield) +
+              (hrItems * ITEM_DATA.gossip.courageYield);
+
+            newCourage = Math.min(100, newCourage + courageGained);
+
+            // Gossip passive cash
+            const avgGossip = (initialGossip + newInventory.gossip) / 2;
+            newCash += avgGossip * 0.05 * stepSeconds;
+
+            // Suspicion decay
+            newSuspicion = Math.max(0, newSuspicion - 0.1 * stepSeconds);
+
+            // Process Ads completing during this step
+            activeAds = activeAds.map(ad => {
+              const updatedTimeRemaining = ad.timeRemaining - stepSeconds;
+              if (updatedTimeRemaining <= 0 && ad.timeRemaining > 0) {
+                newCash += ad.expectedReturn;
+                const buyerName = greglistBuyers[Math.floor(Math.random() * greglistBuyers.length)];
+                const itemName = ITEM_DATA[ad.item].name.en;
+                newEmails.push({
+                  id: Math.random().toString(36).substr(2, 9),
+                  sender: `${buyerName} (via greglist) <gregslist-noreply@gregslist.com>`,
+                  subject: { en: `Your ad for ${ad.amount}x ${itemName} has sold!`, fr: `Votre annonce pour ${ad.amount}x ${itemName} a été vendue !` },
+                  body: { en: `${buyerName} has purchased your items. $${ad.expectedReturn.toFixed(2)} has been wired to your bank account. (Offline sale)`, fr: `${buyerName} a acheté vos articles. ${ad.expectedReturn.toFixed(2)}$ a été déposé sur votre compte bancaire. (Vente hors-ligne)` },
+                  read: false,
+                  timestamp: new Date(currentSimTime + (ad.timeRemaining * 1000)).toISOString()
+                });
+                playedSound = true;
+              }
+              return { ...ad, timeRemaining: updatedTimeRemaining };
+            });
+
+            currentSimTime += stepSeconds * 1000;
+            remainingSeconds -= stepSeconds;
+
+            if (isPaymentDueThisStep) {
+              let totalSalary = 0;
+              totalSalary += newGenerators.intern * GENERATOR_DATA.intern.cost;
+              totalSalary += newGenerators.itGuy * GENERATOR_DATA.itGuy.cost;
+              totalSalary += newGenerators.manager * GENERATOR_DATA.manager.cost;
+              totalSalary += newGenerators.hr * GENERATOR_DATA.hr.cost;
+
+              if (newCash >= totalSalary) {
+                newCash -= totalSalary;
+                lastPaidTime = currentSimTime;
+              } else if (totalSalary > 0) {
+                newGenerators = { ...initialGenerators };
+                lastPaidTime = currentSimTime;
+                newEmails.push({
+                  id: Math.random().toString(36).substr(2, 9),
+                  sender: "HR Department <hr@corp.com>",
+                  subject: { en: "Notice of Resignation (Offline)", fr: "Avis de démission (Hors-ligne)" },
+                  body: { en: "Your contracted employees have left due to unpaid weekly fees during your absence.", fr: "Vos employés contractuels sont partis en raison du non-paiement des frais hebdomadaires pendant votre absence." },
+                  read: false,
+                  timestamp: new Date(currentSimTime).toISOString()
+                });
+                playedSound = true;
+              } else {
+                lastPaidTime = currentSimTime;
+              }
+            }
+          }
+
+          activeAds = activeAds.filter(ad => ad.timeRemaining > 0);
+
+          if (playedSound) {
+            playEmailSound();
+          }
+
+          return {
+            cash: newCash,
+            courage: newCourage,
+            suspicion: newSuspicion,
+            lastPaidTime,
+            generators: newGenerators,
+            activeAds,
+            emails: newEmails,
+            inventory: newInventory,
+            lastTickTime: now,
+          };
+        }),
         
-      reset: () => set({ cash: 0, courage: 0, suspicion: 0, lastStealTime: 0, lastPaidTime: Date.now(), inventory: initialInventory, generators: initialGenerators, activeAds: [], emails: [] }),
+      reset: () => set({ cash: 0, courage: 0, suspicion: 0, lastStealTime: 0, lastPaidTime: Date.now(), lastTickTime: Date.now(), inventory: initialInventory, generators: initialGenerators, activeAds: [], emails: [] }),
     }),
     {
       name: 'corporate-resell-storage-v2',
