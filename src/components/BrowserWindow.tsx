@@ -213,7 +213,21 @@ export default function BrowserWindow({ id, minimized, maximized, zIndex, isActi
           </div>
 
           {/* Web Content */}
-          <div key={refreshKey} style={{ flexGrow: 1, backgroundColor: 'white', overflowY: 'scroll', padding: 16, height: 0 }}>
+          <div 
+            key={refreshKey} 
+            style={{ flexGrow: 1, backgroundColor: 'white', overflowY: 'scroll', padding: 16, height: 0 }}
+            onClick={(e) => {
+              const target = e.target as HTMLAnchorElement;
+              // Intercept clicks on external links to open in the browser
+              if (target.tagName === 'A') {
+                const href = target.getAttribute('href');
+                if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+                  e.preventDefault();
+                  navigateTo(href);
+                }
+              }
+            }}
+          >
             {renderContent()}
           </div>
         </div>
